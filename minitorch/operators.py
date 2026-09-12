@@ -3,7 +3,7 @@
 import math
 
 # ## Task 0.1
-from typing import Iterable
+from typing import Callable, Iterable
 
 #
 # Implementation of a prelude of elementary functions.
@@ -130,16 +130,61 @@ def relu_back(x: float, d: float) -> float:
 # - prod: take the product of lists
 
 
-def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
-    """Add corresponding elements of two lists."""
-    raise NotImplementedError("Need to implement for Task 0.3")
+def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[float]]:
+    """Apply a function to each element."""
+
+    def _map(ls: Iterable[float]) -> Iterable[float]:
+        ret = []
+        for x in ls:
+            ret.append(fn(x))
+        return ret
+
+    return _map
+
+
+def zipWith(
+    fn: Callable[[float, float], float],
+) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:
+    """Apply a function to corresponding elements."""
+
+    def _zipWith(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+        ret = []
+        for x, y in zip(ls1, ls2):
+            ret.append(fn(x, y))
+        return ret
+
+    return _zipWith
+
+
+def reduce(
+    fn: Callable[[float, float], float], start: float
+) -> Callable[[Iterable[float]], float]:
+    """Reduce an iterable from the given initial value."""
+
+    def _reduce(ls: Iterable[float]) -> float:
+        val = start
+        for x in ls:
+            val = fn(val, x)
+        return val
+
+    return _reduce
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
     """Negate every element of a list."""
-    raise NotImplementedError("Need to implement for Task 0.3")
+    return map(neg)(ls)
+
+
+def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+    """Add corresponding elements of two lists."""
+    return zipWith(add)(ls1, ls2)
+
+
+def sum(ls: Iterable[float]) -> float:
+    """Sum the elements of an iterable."""
+    return reduce(add, 0.0)(ls)
 
 
 def prod(ls: Iterable[float]) -> float:
     """Product of a list."""
-    raise NotImplementedError("Need to implement for Task 0.3")
+    return reduce(mul, 1.0)(ls)
