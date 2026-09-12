@@ -87,7 +87,65 @@ class Log(ScalarFunction):
         return operators.log_back(a, d_output)
 
 
-# To implement.
+class Mul(ScalarFunction):
+    """Multiplication function $f(x, y) = x * y$"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float, b: float) -> float:
+        return operators.mul(a, b)
 
 
-# TODO: Implement for Task 1.2.
+class Inv(ScalarFunction):
+    """Inverse function $f(x) = 1/x$"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float) -> float:
+        return operators.inv(a)
+
+
+class Neg(ScalarFunction):
+    """Negation function $f(x) = -x$"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float) -> float:
+        return operators.neg(float(a))
+
+
+class Sigmoid(ScalarFunction):
+    """Sigmoid function."""
+
+    @staticmethod
+    def forward(ctx: Context, a: float) -> float:
+        return operators.sigmoid(a)
+
+
+class ReLU(ScalarFunction):
+    """ReLU function $f(x) =$ x if x is greater than 0, else 0"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float) -> float:
+        return operators.relu(a)
+
+
+class Exp(ScalarFunction):
+    """Exponential function $f(x) = e^{x}$"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float) -> float:
+        return operators.exp(a)
+
+
+class LT(ScalarFunction):
+    """Less-than $f(x, y) =$ 1.0 if x is less than y else 0.0"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float, b: float) -> float:
+        return operators.lt(a, b)
+
+
+class EQ(ScalarFunction):
+    """Equality $f(x, y) =$ 1.0 if x is equal to y else 0.0"""
+
+    @staticmethod
+    def forward(ctx: Context, a: float, b: float) -> float:
+        return operators.eq(a, b)
