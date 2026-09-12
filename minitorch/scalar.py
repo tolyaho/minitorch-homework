@@ -112,14 +112,17 @@ class Scalar:
         return self.history is not None and self.history.last_fn is None
 
     def is_constant(self) -> bool:
+        """True if this scalar has no history and needs no derivative."""
         return self.history is None
 
     @property
     def parents(self) -> Iterable[Variable]:
+        """Inputs used to create this scalar."""
         assert self.history is not None
         return self.history.inputs
 
     def chain_rule(self, d_output: Any) -> Iterable[Tuple[Variable, Any]]:
+        """Pair each non-constant input with its local derivative."""
         h = self.history
         assert h is not None
         assert h.last_fn is not None
@@ -184,10 +187,10 @@ def derivative_check(f: Any, *scalars: Scalar) -> None:
     """Checks that autodiff works on a python function.
     Asserts False if derivative is incorrect.
 
-    Parameters
-    ----------
-        f : function from n-scalars to 1-scalar.
-        *scalars  : n input scalar values.
+    Args:
+    ----
+        f: function from n-scalars to 1-scalar
+        *scalars: n input scalar values
 
     """
     out = f(*scalars)

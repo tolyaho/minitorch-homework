@@ -38,6 +38,7 @@ class ScalarFunction:
 
     @classmethod
     def apply(cls, *vals: ScalarLike) -> Scalar:
+        """Apply this function to Scalar or constant inputs."""
         raw_vals = []
         scalars = []
         for v in vals:
@@ -66,10 +67,12 @@ class Add(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float, b: float) -> float:
+        """Compute $f(a, b) = a + b$."""
         return a + b
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, ...]:
+        """Return the local derivatives of addition."""
         return d_output, d_output
 
 
@@ -78,11 +81,13 @@ class Log(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute $f(a) = log(a)$."""
         ctx.save_for_backward(a)
         return operators.log(a)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of log."""
         (a,) = ctx.saved_values
         return operators.log_back(a, d_output)
 
@@ -92,11 +97,13 @@ class Mul(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float, b: float) -> float:
+        """Compute $f(a, b) = a * b$."""
         ctx.save_for_backward(a, b)
         return operators.mul(a, b)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, ...]:
+        """Return the local derivatives of multiplication."""
         a, b = ctx.saved_values
         return operators.mul(b, d_output), operators.mul(a, d_output)
 
@@ -106,11 +113,13 @@ class Inv(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute $f(a) = 1/a$."""
         ctx.save_for_backward(a)
         return operators.inv(a)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of inverse."""
         (a,) = ctx.saved_values
         return operators.inv_back(a, d_output)
 
@@ -120,10 +129,12 @@ class Neg(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute $f(a) = -a$."""
         return operators.neg(float(a))
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of negation."""
         return operators.neg(d_output)
 
 
@@ -132,12 +143,14 @@ class Sigmoid(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute the sigmoid of `a`."""
         out = operators.sigmoid(a)
         ctx.save_for_backward(out)
         return out
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of sigmoid."""
         (sig,) = ctx.saved_values
         return operators.mul(sig, 1.0 - sig) * d_output
 
@@ -147,11 +160,13 @@ class ReLU(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute the ReLU of `a`."""
         ctx.save_for_backward(a)
         return operators.relu(a)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of ReLU."""
         (a,) = ctx.saved_values
         return operators.relu_back(a, d_output)
 
@@ -161,12 +176,14 @@ class Exp(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float) -> float:
+        """Compute $f(a) = e^{a}$."""
         out = operators.exp(a)
         ctx.save_for_backward(out)
         return out
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
+        """Return the local derivative of exp."""
         (exp_a,) = ctx.saved_values
         return operators.mul(exp_a, d_output)
 
@@ -176,10 +193,12 @@ class LT(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float, b: float) -> float:
+        """Compute $f(a, b) = 1$ if $a < b$ else $0$."""
         return operators.lt(a, b)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, ...]:
+        """Return zero local derivatives for less-than."""
         return 0.0, 0.0
 
 
@@ -188,8 +207,10 @@ class EQ(ScalarFunction):
 
     @staticmethod
     def forward(ctx: Context, a: float, b: float) -> float:
+        """Compute $f(a, b) = 1$ if $a = b$ else $0$."""
         return operators.eq(a, b)
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, ...]:
+        """Return zero local derivatives for equality."""
         return 0.0, 0.0
