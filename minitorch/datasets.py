@@ -5,6 +5,7 @@ from typing import List, Tuple
 
 
 def make_pts(N):
+    """Sample N random points uniformly in the unit square."""
     X = []
     for i in range(N):
         x_1 = random.random()
@@ -21,6 +22,7 @@ class Graph:
 
 
 def simple(N):
+    """Label points 1 if x1 is less than 0.5, otherwise 0."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -30,6 +32,7 @@ def simple(N):
 
 
 def diag(N):
+    """Label points 1 if x1 + x2 is less than 0.5, otherwise 0."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -39,6 +42,7 @@ def diag(N):
 
 
 def split(N):
+    """Label points 1 if x1 is less than 0.2 or greater than 0.8, otherwise 0."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -48,6 +52,7 @@ def split(N):
 
 
 def xor(N):
+    """Label points 1 in opposite quadrants split at 0.5, otherwise 0."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -57,6 +62,7 @@ def xor(N):
 
 
 def circle(N):
+    """Label points 1 if they lie outside a circle of radius sqrt(0.1) at (0.5, 0.5)."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -67,6 +73,7 @@ def circle(N):
 
 
 def spiral(N):
+    """Generate two interleaved spirals of N/2 points with labels 0 and 1."""
 
     def x(t):
         return t * math.cos(t) / 20.0
