@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Tuple, Protocol
+from typing import Any, Dict, Iterable, List, Tuple, Protocol
 
 
 # ## Task 1.1
@@ -61,8 +61,19 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
         Non-constant Variables in topological order starting from the right.
 
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    order: List[Variable] = []
+    visited = set()
+
+    def visit(var: Variable) -> None:
+        if var.is_constant() or var.unique_id in visited:
+            return
+        visited.add(var.unique_id)
+        for parent in var.parents:
+            visit(parent)
+        order.append(var)
+
+    visit(variable)
+    return list(reversed(order))
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -77,8 +88,17 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
 
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    derivatives: Dict[int, Any] = {}
+    derivatives[variable.unique_id] = deriv
+    for var in topological_sort(variable):
+        d = derivatives[var.unique_id]
+        if var.is_leaf():
+            var.accumulate_derivative(d)
+        else:
+            for parent, parent_deriv in var.chain_rule(d):
+                derivatives[parent.unique_id] = (
+                    derivatives.get(parent.unique_id, 0.0) + parent_deriv
+                )
 
 
 @dataclass
