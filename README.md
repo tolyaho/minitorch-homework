@@ -42,3 +42,15 @@ REDUCE: for i in prange(size):  # #10; inner reduce has no function calls
 ```
 
 NUMBA reports those regions as parallel after optimisation. Full `parallel_diagnostics(level=3)` output is from a local run of the official script's MAP/ZIP/REDUCE sections.
+
+## Task 3.2
+
+`python project/parallel_check.py` MATRIX MULTIPLY listing:
+
+```
+for p in prange(batch * rows * cols):  # loop #0, parallel structure already optimal
+    ...
+    for k in range(inner):
+        acc += a[...] * b[...]
+    out[...] = acc
+```
