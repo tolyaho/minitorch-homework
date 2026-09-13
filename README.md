@@ -54,8 +54,7 @@ for p in prange(batch * rows * cols):  # loop #0, parallel structure already opt
 ```
 
 <details>
-<summary>python project/parallel_check.py</summary>
-
+<summary>Full parallel diagnostics</summary>
 <pre>
 MAP
 
@@ -426,11 +425,11 @@ None
 </pre>
 </details>
 
-`task3_3` / `task3_4` tests, a CUDA vs naive MM graph, and `--BACKEND gpu` training remain blocked until a real CUDA GPU/Colab run.
-
 ## Task 3.4
 
-CUDA is not available on this machine (`numba.cuda.is_available()` is false), so GPU tests 3.3/3.4 were not executed. The CUDA kernels in `minitorch/cuda_ops.py` are implemented. The graph below is a real CPU timing of naive Python triple-loop MM vs FastOps MM (warmup excluded):
+### CPU reference
+
+Naive Python matrix multiplication compared with FastOps. Warmup is excluded.
 
 | n | naive (s) | FastOps (s) | speedup |
 | --- | --- | --- | --- |
@@ -441,9 +440,11 @@ CUDA is not available on this machine (`numba.cuda.is_available()` is false), so
 
 ![MM speed](images/mm_speed.png)
 
+CUDA validation and benchmarking require a CUDA-capable GPU and are pending.
+
 ## Task 3.5
 
-Trained `project/run_fast_tensor.py` on CPU (`FastOps`) with `random.seed(0)` before each run. Optimizer is the starter SGD; `max_epochs=500`. The starter logger prints every 10 epochs in `range(500)`, so the last printed epoch is 490. Time per epoch uses the Streamlit trainer formula `elapsed / (epoch + 1)`. GPU training was not run. Contours use the Streamlit `plot_out` colours, written with a stdlib PNG encoder.
+Backend: FastOps (CPU). Seed: 0. Epochs: 500. Logs are reported every 10 epochs, with epoch 490 as the final checkpoint. GPU results are pending.
 
 ### Simple
 
