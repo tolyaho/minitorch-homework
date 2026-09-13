@@ -47,8 +47,8 @@ def index_to_position(index: Index, strides: Strides) -> int:
 
     """
     pos = 0
-    for i, idx in enumerate(index):
-        pos += int(idx) * int(strides[i])
+    for i in range(len(strides)):
+        pos += int(index[i]) * int(strides[i])
     return pos
 
 

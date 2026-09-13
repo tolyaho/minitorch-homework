@@ -30,3 +30,15 @@ python sync_previous_module.py previous-module-dir current-module-dir
 The files that will be synced are:
 
         minitorch/tensor_data.py minitorch/tensor_functions.py minitorch/tensor_ops.py minitorch/operators.py minitorch/scalar.py minitorch/scalar_functions.py minitorch/module.py minitorch/autodiff.py minitorch/module.py project/run_manual.py project/run_scalar.py project/run_tensor.py minitorch/operators.py minitorch/module.py minitorch/autodiff.py minitorch/tensor.py minitorch/datasets.py minitorch/testing.py minitorch/optim.py
+
+## Task 3.1
+
+`python project/parallel_check.py` loop listings for map/zip/reduce (`prange` on the main loops; aligned map/zip skip indexing):
+
+```
+MAP:  for i in prange(size):  # aligned #2 and general #3
+ZIP:  for i in prange(size):  # aligned #7 and general #8
+REDUCE: for i in prange(size):  # #10; inner reduce has no function calls
+```
+
+NUMBA reports those regions as parallel after optimisation. Full `parallel_diagnostics(level=3)` output is from a local run of the official script's MAP/ZIP/REDUCE sections.
