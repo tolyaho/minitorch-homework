@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from typing import Callable, Optional
 
     from .tensor import Tensor
-    from .tensor_data import Index, Shape, Storage, Strides
+    from .tensor_data import Shape, Storage, Strides
 
 # TIP: Use `NUMBA_DISABLE_JIT=1 pytest tests/ -m task3_1` to run these tests without JIT.
 
@@ -30,6 +30,7 @@ Fn = TypeVar("Fn")
 
 
 def njit(fn: Fn, **kwargs: Any) -> Fn:
+    """Compile a function with NUMBA."""
     return _njit(inline="always", **kwargs)(fn)  # type: ignore
 
 
@@ -233,9 +234,7 @@ def tensor_zip(
         for i in range(len(out_shape)):
             size *= out_shape[i]
 
-        aligned = (
-            len(out_shape) == len(a_shape) == len(b_shape)
-        )
+        aligned = len(out_shape) == len(a_shape) == len(b_shape)
         if aligned:
             for i in range(len(out_shape)):
                 if (
@@ -309,7 +308,7 @@ def tensor_reduce(
             start_pos = index_to_position(out_index, a_strides)
             acc = out[o]
             for s in range(reduce_size):
-                acc = fn(acc, a_storage[start_pos + s * reduce_stride])
+                acc = fn(acc, a_storage[start_pos + s * reduce_stride])  # type: ignore
             out[o] = acc
 
     return njit(_reduce, parallel=True)  # type: ignore
